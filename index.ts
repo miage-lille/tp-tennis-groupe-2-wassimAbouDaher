@@ -1,5 +1,5 @@
 import { Player, stringToPlayer } from './types/player';
-import { Point, PointsData, Score, advantage, game, deuce, forty, fifteen, thirty, FortyData } from './types/score';
+import { Point, PointsData, Score, advantage, game, deuce, forty, fifteen, thirty, points, love, FortyData } from './types/score';
 import { pipe, Option } from 'effect'
 
 // -------- Tooling functions --------- //
@@ -66,7 +66,6 @@ export const scoreWhenAdvantage = (
 // Exercice 2
 // Tip: You can use pipe function from Effect to improve readability.
 // See scoreWhenForty function above.
-
 export const incrementPoint = (point: Point): Option.Option<Point> => {
   switch (point.kind) {
     case 'LOVE':
@@ -94,20 +93,40 @@ export const scoreWhenForty = (
   );
 };
 
-
-
-// Exercice 2
-// Tip: You can use pipe function from Effect to improve readability.
-// See scoreWhenForty function above.
 export const scoreWhenPoint = (current: PointsData, winner: Player): Score => {
-  throw new Error('not implemented');
+  const winnerPoint = current[winner];
+  const other = otherPlayer(winner);
+  const otherPoint = current[other];
+
+  return pipe(
+    incrementPoint(winnerPoint),
+    Option.match({
+      onSome: (p: Point) =>
+        points(
+          winner === 'PLAYER_ONE' ? p : otherPoint,
+          winner === 'PLAYER_ONE' ? otherPoint : p
+        ),
+      onNone: () => forty(winner, otherPoint),
+    })
+  );
 };
 
 // Exercice 3
 export const scoreWhenGame = (winner: Player): Score => {
-  throw new Error('not implemented');
+  return game(winner);
 };
 
 export const score = (currentScore: Score, winner: Player): Score => {
-  throw new Error('not implemented');
+  switch (currentScore.kind) {
+    case 'POINTS':
+      return scoreWhenPoint(currentScore.pointsData, winner);
+    case 'FORTY':
+      return scoreWhenForty(currentScore.fortyData, winner);
+    case 'DEUCE':
+      return scoreWhenDeuce(winner);
+    case 'ADVANTAGE':
+      return scoreWhenAdvantage(currentScore.player, winner);
+    case 'GAME':
+      return scoreWhenGame(currentScore.player);
+  }
 };

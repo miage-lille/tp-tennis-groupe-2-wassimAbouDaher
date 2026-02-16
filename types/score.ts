@@ -1,7 +1,30 @@
 import { Player } from './player';
 
-// Surely not the best choice
-export type Point = number;
+export type Love = {
+  kind: 'LOVE';
+};
+
+export type Fifteen = {
+  kind: 'FIFTEEN';
+};
+
+export type Thirty = {
+  kind: 'THIRTY';
+};
+
+export type Point = Love | Fifteen | Thirty;
+
+export const love = (): Love => ({
+  kind: 'LOVE',
+});
+
+export const fifteen = (): Fifteen => ({
+  kind: 'FIFTEEN',
+});
+
+export const thirty = (): Thirty => ({
+  kind: 'THIRTY',
+});
 
 export type PointsData = {
   PLAYER_ONE: Point;
@@ -23,8 +46,6 @@ export const points = (
     PLAYER_TWO: playerTwoPoints,
   },
 });
-
-// Exerice 0: Write all type constructors of Points, Deuce, Forty and Advantage types.
 
 export type FortyData = {
   player: Player; // The player who have forty points
