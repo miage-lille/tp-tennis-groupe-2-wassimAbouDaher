@@ -1,5 +1,5 @@
 import { Player, stringToPlayer } from './types/player';
-import { Point, PointsData, Score, advantage, game, deuce } from './types/score';
+import { Point, PointsData, Score, advantage, game, deuce, forty, fifteen, thirty, FortyData } from './types/score';
 import { pipe, Option } from 'effect'
 
 // -------- Tooling functions --------- //
@@ -63,11 +63,35 @@ export const scoreWhenAdvantage = (
   return deuce();
 };
 
+// Exercice 2
+// Tip: You can use pipe function from Effect to improve readability.
+// See scoreWhenForty function above.
+
+export const incrementPoint = (point: Point): Option.Option<Point> => {
+  switch (point.kind) {
+    case 'LOVE':
+      return Option.some(fifteen());
+    case 'FIFTEEN':
+      return Option.some(thirty());
+    case 'THIRTY':
+      return Option.none();
+  }
+};
+
 export const scoreWhenForty = (
-  currentForty: unknown, // TO UPDATE WHEN WE KNOW HOW TO REPRESENT FORTY
+  currentForty: FortyData,
   winner: Player
 ): Score => {
-  throw new Error('not implemented');
+  if (currentForty.player === winner) {
+    return game(winner);
+  }
+  return pipe(
+    incrementPoint(currentForty.otherPoint),
+    Option.match({
+      onNone: () => deuce(),
+      onSome: (p: Point) => forty(currentForty.player, p),
+    })
+  );
 };
 
 
