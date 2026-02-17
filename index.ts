@@ -2,7 +2,7 @@ import { Player, stringToPlayer } from './types/player';
 import { Point, PointsData, Score, advantage, game, deuce, forty, fifteen, thirty, points, love, FortyData } from './types/score';
 import { pipe, Option } from 'effect'
 
-// -------- Tooling functions --------- //
+
 
 export const playerToString = (player: Player) => {
   switch (player) {
@@ -20,7 +20,7 @@ export const otherPlayer = (player: Player) => {
       return stringToPlayer('PLAYER_ONE');
   }
 };
-// Exercice 1 :
+
 export const pointToString = (point: Point): string => {
   switch (point.kind) {
     case 'LOVE':
@@ -63,9 +63,7 @@ export const scoreWhenAdvantage = (
   return deuce();
 };
 
-// Exercice 2
-// Tip: You can use pipe function from Effect to improve readability.
-// See scoreWhenForty function above.
+
 export const incrementPoint = (point: Point): Option.Option<Point> => {
   switch (point.kind) {
     case 'LOVE':
@@ -111,7 +109,7 @@ export const scoreWhenPoint = (current: PointsData, winner: Player): Score => {
   );
 };
 
-// Exercice 3
+
 export const scoreWhenGame = (winner: Player): Score => {
   return game(winner);
 };

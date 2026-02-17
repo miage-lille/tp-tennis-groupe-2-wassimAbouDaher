@@ -71,7 +71,7 @@ export type Game = {
   player: Player;
 };
 
-// Exercice 0: Write all type constructors of Points, Deuce, Forty and Advantage types.
+
 
 export const deuce = (): Deuce => ({
   kind: 'DEUCE',
